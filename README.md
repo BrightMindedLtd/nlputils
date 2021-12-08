@@ -16,7 +16,7 @@ It helps build and manager vocabularies from corpi. It includes the following fu
 6. merging of multiple vocabularies
 
 
-### Frequentise:
+### Frequentise
 
 Utility to build and manage frequency matrices from corpi with the following functionality:
 
