@@ -44,9 +44,15 @@ class Vocabularise( object ):
 
 		for word in vocab:
 
-			if word not in stem2word:
+			stem = self._stemmer.stem( word )
 
-				stem2word[ word ] = .
+			if stem not in stem2word:
+
+				stem2word[ stem ] = []
+
+			if word not in stem2word[ stem ]:
+				
+				stem2word[ stem ].append( word )
 
 		return list( stem2word.keys() ), stem2word
 

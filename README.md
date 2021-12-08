@@ -10,10 +10,9 @@ It helps build and manager vocabularies from corpi. It includes the following fu
 
 1. tokenise
 2. stem or unstem
-3. mappings: unstemmed to stemmed and reverse
-4. filters: ability to define filters that will accept or reject vocabulary entries (e.g. stopwords)	
-5. token-level cleanups
-6. merging of multiple vocabularies
+3. filters: ability to define filters that will accept or reject vocabulary entries (e.g. stopwords)	
+4. token-level cleanups
+5. merging of multiple vocabularies
 
 
 ### Frequentise
