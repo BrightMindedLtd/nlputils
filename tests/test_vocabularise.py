@@ -83,7 +83,7 @@ class TestVocabularise( unittest.TestCase ):
     def testVocabularise( self ):
 
         # in the default scenario the assumption is that
-        # stem=False, tokeniser=None, cleanup=None.  The default
+        # tokeniser=None, cleanup=None, stem=False.  The default
         # tokeniser is nltk.word_tokenize.
         
         corpus = [
@@ -115,27 +115,44 @@ class TestVocabularise( unittest.TestCase ):
         
         self.assertEqual( len( actualVocabulary ), len ( actualVocabularySet ) )
 
-
         # When a regular expression is supplied to
         # the tokeniser, we expect the text to be 
         # tokenise correctly.
 
-        expectedVocabulary = ["every", "time", "i", "thought", "was", "being", "rejected", "from", "something", "good", "actually", "re-directed", "to", "better", "it", "is", "not", "so", "much", "the", "major", "events", "as", "small", "day-to-day", "decisions", "that", "map", "course", "of", "our", "living", "lives", "are", "in", "reality", "sum", "total", "seemingly", "unimportant", "and", "capacity", "live", "by", "those", "maybe", "okay", "will", "be", "always", "when", "world", "pushes", "you", "your", "knees", "you're", "perfect", "position", "pray", "criticism", "however", "valid", "or", "intellectually", "engaging", "tends", "get", "way", "a", "writer", "who", "has", "anything", "personal", "say", "tightrope", "walker", "may", "require", "practice", "but", "he", "starts", "theory", "equilibrium", "lose", "grace", "probably", "fall", "off" ] 
+        expectedVocabulary = ["if", "every", "time", "i", "thought", "was", "being", "rejected", "from", "something", "good", "actually", "re-directed", "to", "better", "it", "is", "not", "so", "much", "the", "major", "events", "as", "small", "day-to-day", "decisions", "that", "map", "course", "of", "our", "living", "lives", "are", "in", "reality", "sum", "total", "seemingly", "unimportant", "and", "capacity", "live", "by", "those", "maybe", "okay", "will", "be", "always", "when", "world", "pushes", "you", "your", "knees", "you're", "perfect", "position", "pray", "criticism", "however", "valid", "or", "intellectually", "engaging", "tends", "get", "way", "a", "writer", "who", "has", "anything", "personal", "say", "tightrope", "walker", "may", "require", "practice", "but", "he", "starts", "theory", "equilibrium", "lose", "grace", "probably", "fall", "off" ] 
 
-        regex = r'[\w]+((?!\s)\W?[\w]+)*'
-        
+        regex = Vocabularise.PUNCTUATION_MID_WORD_ONLY
+
         actualVocabulary = self.V.vocabularise( corpus, tokeniser=regex )
 
-        print( "Actual Vocab:", actualVocabulary )
-
-        self.assertListEqual( actualVocabulary, expectedVocabulary )
+        self.assertListEqual( sorted( actualVocabulary ), sorted( expectedVocabulary ) )
+             
+        # When a regular expression is supplied to
+        # the cleanup, we expect the text to be 
+        # cleaned up correctly.
         
-        
+        cleanupRegex = r'[a-zø]+'
 
+        dirtyCorpus = [ "Sven Magnus Øen Carlsen[a] (born 30 November 1990)[1][2] is a Norwegian[5] chess grandmaster" ]
 
+        expectedVocabulary = [ 'sven', 'magnus', 'øen', 'carlsen', 'born', 'november', 'is', 'a', 'norwegian', 'chess', 'grandmaster' ] 
 
+        actualVocabulary = self.V.vocabularise( dirtyCorpus, cleanup=cleanupRegex )
 
+        self.assertListEqual( sorted( actualVocabulary ), sorted( expectedVocabulary ) )    
 
+        # When stem == True, the vocabuliser should
+        # return correctly stemmed vocabulary.
 
+        unstemmedDoc = [ ( ' ' ).join( [ 'caresses', 'flies', 'dies', 'mules', 'denied',
+           'died', 'agreed', 'owned', 'humbled', 'sized',
+            'meeting', 'stating', 'siezing', 'itemization',
+            'sensational', 'traditional', 'reference', 'colonizer',
+            'plotted' ] ) ]
 
+        expectedVocabulary = "caress fli die mule deni agre own humbl size meet state siez item sensat tradit refer colon plot".split( " " )
+
+        actualVocabulary = self.V.vocabularise( unstemmedDoc, stem=True )
+
+        self.assertListEqual( sorted( actualVocabulary ), sorted( expectedVocabulary ) )
 

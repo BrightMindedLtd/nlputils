@@ -5,20 +5,19 @@ from nltk.stem.porter import PorterStemmer
 from nltk.tokenize import word_tokenize, RegexpTokenizer
 
 class Vocabularise( object ):
-
+    
+    # This regex removes all punctuation not surrounded by letters.
+    PUNCTUATION_MID_WORD_ONLY = r"([\w]+(?:(?!\s)\W?[\w]+)*)"
+    
     def __init__( self ):
 
         self._stemmer = PorterStemmer()
 
     def tokenise( self, text, regex=None ):
-
+        
         if regex:
             tokeniser = RegexpTokenizer( regex )
-            
-            print("Text:", text )
-            
-            print("Result:", tokeniser.tokenize( text ) )
-            
+
             return tokeniser.tokenize( text )
         
         return word_tokenize( text )
@@ -83,6 +82,7 @@ class Vocabularise( object ):
         vocabList = list( set( vocab ) )
 
         if stem:
+  
             vocabList, _  = self.stem( vocabList )
 
         return vocabList
