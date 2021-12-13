@@ -16,8 +16,6 @@ class Vocabularise( object ):
      
         return not word in get_stop_words( 'en' )
     
-    
-    
     def __init__( self ):
 
         self._stemmer = PorterStemmer()
@@ -31,20 +29,13 @@ class Vocabularise( object ):
         
         return word_tokenize( text )
 
-
     def tokenCleanup( self, dirty, regex ):
         
         if not regex:
         
             return dirty
         
-        result = re.findall( regex, dirty )
-
-        if result:
-
-            return result[ 0 ]
-
-        return ''
+        return re.sub( regex, "", dirty )
 
 
     def tokensCleanup( self, dirty, regex ):
@@ -52,7 +43,6 @@ class Vocabularise( object ):
         result = [ self.tokenCleanup( token, regex ) for token in dirty ]
 
         return [ token for token in result if token ]
-
 
     def stem( self, vocab ):
 
@@ -105,7 +95,6 @@ class Vocabularise( object ):
                 break
             
         return vocab
-
 
     def vocabularise( self, corpus, tokeniser=None, cleanup=None, stem=False ):
         

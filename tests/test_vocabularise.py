@@ -42,7 +42,7 @@ class TestVocabularise( unittest.TestCase ):
 
         expected = 'football'
 
-        regex = r'[A-Za-z]+'
+        regex = r'\d+'
 
         actual = self.V.tokenCleanup( dirtyToken, regex )
 
@@ -55,8 +55,8 @@ class TestVocabularise( unittest.TestCase ):
 
         expected = [ 'football', 'ironman', 'help', 'venom' ]
     
-        regex = r'[A-Za-z]+'
-
+        regex = r'[^A-Za-z]+'
+        
         actual = self.V.tokensCleanup( dirty, regex )
 
         self.assertListEqual( actual, expected )
@@ -210,7 +210,7 @@ class TestVocabularise( unittest.TestCase ):
         # the cleanup, we expect the text to be 
         # cleaned up correctly.
         
-        cleanupRegex = r'[a-zø]+'
+        cleanupRegex = r'[^a-zø]+'
 
         dirtyCorpus = [ "Sven Magnus Øen Carlsen[a] (born 30 November 1990)[1][2] is a Norwegian[5] chess grandmaster" ]
 

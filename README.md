@@ -13,6 +13,7 @@ It helps build and manager vocabularies from corpi. It includes the following fu
 3. filters: ability to define filters that will accept or reject vocabulary entries (e.g. stopwords)	
 4. token-level cleanups
 5. merging of multiple vocabularies
+6. Replace character(s) in all token
 
 
 ### Frequentise
