@@ -10,6 +10,9 @@ class TestVocabularise( unittest.TestCase ):
 
         self.V = Vocabularise()
 
+    def assertUnsortedListEqual( self, list1, list2 ):
+        
+        return self.assertListEqual( sorted( list1 ), sorted( list2 ) )
 
     def testTokenise( self ):
 
@@ -80,6 +83,82 @@ class TestVocabularise( unittest.TestCase ):
 
         self.assertDictEqual( stem2word, expectedMap )
 
+    
+    def testMergeVocabularies( self ):
+        
+        vocab1 = [ 'apple', 'dog', 'caterpillar', 'hello' ]
+        
+        vocab2 = [ 'dog', 'wolf', 'beach', 'apple' ]
+        
+        expectedResult = [ 'apple', 'dog', 'caterpillar', 'hello', 'wolf', 'beach' ]
+        
+        actualResult = self.V.mergeVocabularies( vocab1, vocab2 )
+        
+        self.assertUnsortedListEqual( actualResult , expectedResult )
+
+    def testMergeStemMaps( self ):
+        
+        stemMap1 = {
+
+            'footbal': [ 'football', 'footballs' ], 
+            'reduct': [ 'reducted', 'reduction' ], 
+            'shine': [ 'shines' ]
+            
+        }
+        
+        stemMap2 = {    
+            
+            'shine': [ 'shining' ], 
+            'reduct': [ 'reducted', 'reduction' ], 
+            'cat': [ 'cat', 'cats' ]
+            
+        }
+    
+        expectedMap = {
+            
+            'footbal': [ 'football', 'footballs' ], 
+            'reduct': [ 'reducted', 'reduction' ], 
+            'shine': [ 'shines', 'shining' ],
+            'cat': [ 'cat', 'cats' ]
+            
+        }
+        
+        actualMap = self.V.mergeStemMaps( stemMap1, stemMap2 )
+        
+        self.assertListEqual( list( actualMap.keys() ), list( expectedMap.keys() ) )
+        
+        for key in actualMap.keys():
+
+            self.assertUnsortedListEqual( actualMap[ key ] , expectedMap[ key ] )
+
+    def testFilter( self ):
+        
+        # If no function is supplied to filter, we
+        # take stop_words as default.
+        
+        vocab = [ "if", "every", "time", "i", "thought", "was", "being", "rejected", "from", "something", "good", "actually", "re-directed", "to" ]
+
+        expectedVocab = [ "every", "time", "thought", "rejected", "something", "good", "actually", "re-directed" ]
+
+        actualVocab = self.V.filter( vocab )
+        
+        self.assertUnsortedListEqual( actualVocab, expectedVocab )
+
+        with self.assertRaises( ValueError ):
+            self.V.filter( vocab, vocab )
+
+        # If multiple filters are supplied,
+        #   we filter by all of them
+        
+        def newFilter( word ):
+            return not word[0:2] == 're'
+
+        expectedVocab = [ "every", "time", "thought", "something", "good", "actually" ]
+
+        actualVocab = self.V.filter( vocab, Vocabularise.stopWordsFilter, newFilter )
+        
+        self.assertUnsortedListEqual( actualVocab, expectedVocab )
+
     def testVocabularise( self ):
 
         # in the default scenario the assumption is that
@@ -119,13 +198,13 @@ class TestVocabularise( unittest.TestCase ):
         # the tokeniser, we expect the text to be 
         # tokenise correctly.
 
-        expectedVocabulary = ["if", "every", "time", "i", "thought", "was", "being", "rejected", "from", "something", "good", "actually", "re-directed", "to", "better", "it", "is", "not", "so", "much", "the", "major", "events", "as", "small", "day-to-day", "decisions", "that", "map", "course", "of", "our", "living", "lives", "are", "in", "reality", "sum", "total", "seemingly", "unimportant", "and", "capacity", "live", "by", "those", "maybe", "okay", "will", "be", "always", "when", "world", "pushes", "you", "your", "knees", "you're", "perfect", "position", "pray", "criticism", "however", "valid", "or", "intellectually", "engaging", "tends", "get", "way", "a", "writer", "who", "has", "anything", "personal", "say", "tightrope", "walker", "may", "require", "practice", "but", "he", "starts", "theory", "equilibrium", "lose", "grace", "probably", "fall", "off" ] 
+        expectedVocabulary = [ "if", "every", "time", "i", "thought", "was", "being", "rejected", "from", "something", "good", "actually", "re-directed", "to", "better", "it", "is", "not", "so", "much", "the", "major", "events", "as", "small", "day-to-day", "decisions", "that", "map", "course", "of", "our", "living", "lives", "are", "in", "reality", "sum", "total", "seemingly", "unimportant", "and", "capacity", "live", "by", "those", "maybe", "okay", "will", "be", "always", "when", "world", "pushes", "you", "your", "knees", "you're", "perfect", "position", "pray", "criticism", "however", "valid", "or", "intellectually", "engaging", "tends", "get", "way", "a", "writer", "who", "has", "anything", "personal", "say", "tightrope", "walker", "may", "require", "practice", "but", "he", "starts", "theory", "equilibrium", "lose", "grace", "probably", "fall", "off" ] 
 
         regex = Vocabularise.PUNCTUATION_MID_WORD_ONLY
 
         actualVocabulary = self.V.vocabularise( corpus, tokeniser=regex )
 
-        self.assertListEqual( sorted( actualVocabulary ), sorted( expectedVocabulary ) )
+        self.assertUnsortedListEqual( actualVocabulary, expectedVocabulary )
              
         # When a regular expression is supplied to
         # the cleanup, we expect the text to be 
@@ -139,7 +218,7 @@ class TestVocabularise( unittest.TestCase ):
 
         actualVocabulary = self.V.vocabularise( dirtyCorpus, cleanup=cleanupRegex )
 
-        self.assertListEqual( sorted( actualVocabulary ), sorted( expectedVocabulary ) )    
+        self.assertUnsortedListEqual(  actualVocabulary, expectedVocabulary )    
 
         # When stem == True, the vocabuliser should
         # return correctly stemmed vocabulary.
@@ -154,5 +233,5 @@ class TestVocabularise( unittest.TestCase ):
 
         actualVocabulary = self.V.vocabularise( unstemmedDoc, stem=True )
 
-        self.assertListEqual( sorted( actualVocabulary ), sorted( expectedVocabulary ) )
+        self.assertUnsortedListEqual( actualVocabulary, expectedVocabulary )
 
