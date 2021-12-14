@@ -14,7 +14,7 @@ It helps build and manager vocabularies from corpi. It includes the following fu
 4. token-level cleanups
 5. merging of multiple vocabularies
 6. Replace character(s) in all token
-
+7. Save vocabulary
 
 ### Frequentise
 

@@ -1,4 +1,6 @@
-import re 
+import re
+import pickle
+from datetime import datetime
 
 from stop_words import get_stop_words
 
@@ -29,18 +31,18 @@ class Vocabularise( object ):
         
         return word_tokenize( text )
 
-    def tokenCleanup( self, dirty, regex ):
+    def tokenCleanup( self, dirtyWord, regex ):
         
         if not regex:
         
-            return dirty
+            return dirtyWord
         
-        return re.sub( regex, "", dirty )
+        return re.sub( regex, "", dirtyWord )
 
 
-    def tokensCleanup( self, dirty, regex ):
+    def tokensCleanup( self, dirtyDoc, regex ):
 
-        result = [ self.tokenCleanup( token, regex ) for token in dirty ]
+        result = [ self.tokenCleanup( token, regex ) for token in dirtyDoc ]
 
         return [ token for token in result if token ]
 
@@ -48,9 +50,13 @@ class Vocabularise( object ):
 
         stem2word = {}
 
+        stemmedVocab = []
+
         for word in vocab:
 
             stem = self._stemmer.stem( word )
+
+            stemmedVocab.append( stem )
 
             if stem not in stem2word:
 
@@ -60,7 +66,7 @@ class Vocabularise( object ):
                 
                 stem2word[ stem ].append( word )
 
-        return list( stem2word.keys() ), stem2word
+        return stemmedVocab, stem2word
 
     def mergeVocabularies( self, vocab1, vocab2 ):
         
@@ -100,24 +106,36 @@ class Vocabularise( object ):
         
         vocab = []
         
+        newCorpus = []
+        
         for doc in corpus:
             
             doc = doc.lower()
             
-            tokenedVocab = self.tokenise( doc, regex=tokeniser )
+            tokenedDoc = self.tokenise( doc, regex=tokeniser )
             
-            cleanedVocab = self.tokensCleanup( tokenedVocab, cleanup )
+            cleanedDoc = self.tokensCleanup( tokenedDoc, cleanup )
             
-            vocab += cleanedVocab
+            if stem:
+                
+                cleanedDoc, _ = self.stem( cleanedDoc )
+            
+            vocab += cleanedDoc
+            
+            newCorpus += [ cleanedDoc ]
         
         vocabList = list( set( vocab ) )
 
-        if stem:
-  
-            vocabList, _  = self.stem( vocabList )
+        return vocabList, newCorpus
 
-        return vocabList
-
-
-
+    def saveVocabulary( self, vocab, filename=None ):
+           
+        if not filename:
+            
+            dateTimeObj = datetime.now()
+            
+            filename = str( 'vocabulary_list_' + dateTimeObj.strftime( "%d-%b-%Y-%H-%M" ) + '.PKL' ) 
+        
+        with open( filename, 'wb' ) as outfile:
+            pickle.dump( vocab, outfile )
 

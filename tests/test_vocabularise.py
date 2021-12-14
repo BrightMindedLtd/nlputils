@@ -1,19 +1,15 @@
-import unittest
-
 from vocabularise import Vocabularise
 
 from nltk.tokenize import word_tokenize
 
-class TestVocabularise( unittest.TestCase ):
+from tests.base_test_case import BaseTestCase
+
+class TestVocabularise( BaseTestCase ):
 
     def setUp( self ):
 
         self.V = Vocabularise()
-
-    def assertUnsortedListEqual( self, list1, list2 ):
-        
-        return self.assertListEqual( sorted( list1 ), sorted( list2 ) )
-
+   
     def testTokenise( self ):
 
         # when the input is a string of text a default tokenisation is used
@@ -66,7 +62,7 @@ class TestVocabularise( unittest.TestCase ):
 
         vocab = [ 'football', 'footballs', 'reducted', 'reduction', 'shining', 'cat', 'cat', 'cats' ]
 
-        expectedStems = [ 'footbal', 'reduct', 'shine', 'cat' ]
+        expectedStems = [ 'footbal', 'footbal', 'reduct', 'reduct', 'shine', 'cat', 'cat', 'cat' ]
 
         expectedMap = {
 
@@ -175,7 +171,7 @@ class TestVocabularise( unittest.TestCase ):
 
         ]
         
-        actualVocabulary = self.V.vocabularise( corpus )
+        actualVocabulary, _ = self.V.vocabularise( corpus )
         
         actualVocabularySet = set( actualVocabulary )
         
@@ -202,7 +198,7 @@ class TestVocabularise( unittest.TestCase ):
 
         regex = Vocabularise.PUNCTUATION_MID_WORD_ONLY
 
-        actualVocabulary = self.V.vocabularise( corpus, tokeniser=regex )
+        actualVocabulary, _ = self.V.vocabularise( corpus, tokeniser=regex )
 
         self.assertUnsortedListEqual( actualVocabulary, expectedVocabulary )
              
@@ -216,7 +212,7 @@ class TestVocabularise( unittest.TestCase ):
 
         expectedVocabulary = [ 'sven', 'magnus', 'øen', 'carlsen', 'born', 'november', 'is', 'a', 'norwegian', 'chess', 'grandmaster' ] 
 
-        actualVocabulary = self.V.vocabularise( dirtyCorpus, cleanup=cleanupRegex )
+        actualVocabulary, _ = self.V.vocabularise( dirtyCorpus, cleanup=cleanupRegex )
 
         self.assertUnsortedListEqual(  actualVocabulary, expectedVocabulary )    
 
@@ -230,8 +226,16 @@ class TestVocabularise( unittest.TestCase ):
             'plotted' ] ) ]
 
         expectedVocabulary = "caress fli die mule deni agre own humbl size meet state siez item sensat tradit refer colon plot".split( " " )
-
-        actualVocabulary = self.V.vocabularise( unstemmedDoc, stem=True )
+        
+        expectedDoc = [ 'caress', 'fli', 'die', 'mule', 'deni',
+           'die', 'agre', 'own', 'humbl', 'size',
+            'meet', 'state', 'siez', 'item',
+            'sensat', 'tradit', 'refer', 'colon',
+            'plot' ]
+        
+        actualVocabulary, actualNewCorpus = self.V.vocabularise( unstemmedDoc, stem=True )
 
         self.assertUnsortedListEqual( actualVocabulary, expectedVocabulary )
-
+        
+        for doc in actualNewCorpus:
+            self.assertListEqual( doc, expectedDoc )
