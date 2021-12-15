@@ -27,3 +27,17 @@ class Frequentise( object ):
                 frequencyMatrix[ i, j ] = sum( [ a == word for a in doc ] )
         
         return vocabList, adjustedCorpus, frequencyMatrix
+
+
+    def merge( self, vx, vy, mx, my ):
+
+        assert isinstance( mx, np.ndarray )
+        assert isinstance( my, np.ndarray )
+
+        if len( vx ) != mx.shape[ 0 ]:
+            raise ValueError( 'The number of rows in mx must match the size of vx' )
+
+        if len( vy ) != my.shape[ 0 ]:
+            raise ValueError( 'The number of rows in my must match the size of vy' )
+
+        return [], np.zeros( 10 )
