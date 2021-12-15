@@ -118,12 +118,21 @@ class TestFrequentise( BaseTestCase ):
 
         # the rows in M should match the vocabulary indices
         # matrix M should match matrix expectedV 
-        # for idx, word in enumerate( V ):
+        
+        vidxmap = { word: M[ i ] for i, word in enumerate( V ) }
+        
+        for idx, word in enumerate( expectedV ):
+        
+            try:
+    		
+                np.testing.assert_array_equal( vidxmap[ word ], expectedM[ idx ] )
+    		
+            except AssertionError as e:
+    		
+                self.fail( e )
+        
+        
+        
+        
 
-        #     iExpected = expectedV.index( word )
-
-        #     if word in V_x:
-        #         iV_x = V_x.index( word )
-
-        #         self.assertEqual( M[ idx ], )
 
