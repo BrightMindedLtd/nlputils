@@ -30,49 +30,47 @@ class Frequentise( object ):
 
 
     def merge( self, vx, vy, mx, my ):
-
+        
+        wordNumx, docNumx = mx.shape
+        wordNumy, docNumy = my.shape
+        
+        vxdict = { word:idx for idx, word in enumerate( vx ) }
+        vydict = { word:idx for idx, word in enumerate( vy ) }
+        
         assert isinstance( mx, np.ndarray )
         assert isinstance( my, np.ndarray )
 
-        if len( vx ) != mx.shape[ 0 ]:
+        if len( vx ) != wordNumx:
             raise ValueError( 'The number of rows in mx must match the size of vx' )
 
-        if len( vy ) != my.shape[ 0 ]:
+        if len( vy ) != wordNumy:
             raise ValueError( 'The number of rows in my must match the size of vy' )
 
-        return [], np.zeros( 10 )
+        combinedV = list( set( vx + vy ) )
+
+        mergedMatrix = np.zeros( [ len( combinedV ), docNumx + docNumy ] )
+        
+        for idx, word in enumerate( combinedV ):
+            
+            if word in vxdict:
+                
+                mergedMatrix[ idx, :docNumx ] += mx[ vxdict[ word ] ]
+
+            if word in vydict:
+                
+                mergedMatrix[ idx, docNumx: ] += my[ vydict[ word ] ]
+                
+                
+                
+        print("vx:", vx)
+        print("vy:", vy)  
+        print( "combined:", combinedV )
+        
+        print("mx:", mx)
+        print("my:", my)
+        print( "Merged:", mergedMatrix )
+        
+        return combinedV, mergedMatrix
     
     
     
-            
-        # docNumx = M_x.shape[ 0 ]
-        
-        # docNumy = M_y.shape[ 0 ]
-        
-        # for i, word in enumerate( V ):
-            
-        #     if word in V_x:
-                
-        #         rowV_x = M_x[ V_x.index( word ) ]
-                
-        #     else:
-                
-        #         rowV_x = np.zeros( [ 1, docNumx ] )
-            
-        #     if word in V_y:
-                
-        #         rowV_y = M_y[ V_y.index( word ) ]
-                
-        #     else:
-                
-        #         rowV_y = np.zeros( [ 1, docNumy ] )
-        
-        #     expectedRow = np.hstack( ( rowV_x, rowV_y ) )
-        
-        #     try:
-    		
-        #         np.testing.assert_array_equal( M[ i ], expectedRow )
-    		
-        #     except AssertionError as e:
-    		
-        #         self.fail( e )
