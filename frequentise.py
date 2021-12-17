@@ -59,17 +59,7 @@ class Frequentise( object ):
             if word in vydict:
                 
                 mergedMatrix[ idx, docNumx: ] += my[ vydict[ word ] ]
-                
-                
-                
-        print("vx:", vx)
-        print("vy:", vy)  
-        print( "combined:", combinedV )
-        
-        print("mx:", mx)
-        print("my:", my)
-        print( "Merged:", mergedMatrix )
-        
+                        
         return combinedV, mergedMatrix
     
     
