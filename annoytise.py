@@ -14,7 +14,7 @@ class Annoytise( object ):
 		return torchtext.vocab.GloVe( name="6B", dim=dim )
 
 
-	def __init__( self, embedding=None, dim=DEFAULT_GLOVE_DIM, trees=NUM_TREES )
+	def __init__( self, embedding=None, dim=DEFAULT_GLOVE_DIM, trees=NUM_TREES ):
 
 		# we assume embedding to be a dictionary-like object
 		# that accepts tokens as keys and returns dim-dimensional
@@ -50,7 +50,7 @@ class Annoytise( object ):
 
 			return self._index
 
-		except Error as e: 
+		except Exception as e: 
 
 			print ( e )
 		

@@ -4,8 +4,6 @@ from frequentise import Frequentise
 
 from vocabularise import Vocabularise
 
-#from nltk.tokenize import word_tokenize
-
 from tests.base_test_case import BaseTestCase
 
 class TestFrequentise( BaseTestCase ):
