@@ -1,8 +1,8 @@
 import numpy as np
 
-from frequentise import Frequentise
+from nlp.frequentise import Frequentise
 
-from vocabularise import Vocabularise
+from nlp.vocabularise import Vocabularise
 
 from tests.base_test_case import BaseTestCase
 

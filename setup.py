@@ -13,7 +13,7 @@ if os.path.isfile( reqpath ):
 
 setup(
     name='kapowdatautils',
-    packages=['vocabularise', 'frequentise', 'annoytise'],
+    packages=['nlp'],
     description='A library of utilities for text preprocessing for machine learning tasks',
     version='0.0.1',
     url='https://github.com/BrightMindedLtd/kapow-datautils',

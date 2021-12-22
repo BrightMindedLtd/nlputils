@@ -1,4 +1,4 @@
-from vocabularise import Vocabularise
+from nlp.vocabularise import Vocabularise
 
 from nltk.tokenize import word_tokenize
 

@@ -1,4 +1,4 @@
-from vocabularise import Vocabularise
+from npl.vocabularise import Vocabularise
 
 
 def main():

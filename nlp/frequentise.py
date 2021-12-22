@@ -2,7 +2,7 @@ import numpy as np
 import pickle
 from datetime import datetime
 
-from vocabularise import Vocabularise
+from nlp.vocabularise import Vocabularise
 
 class Frequentise( object ):
     """
