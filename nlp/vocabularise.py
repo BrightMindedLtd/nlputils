@@ -8,6 +8,8 @@ from nltk.stem.porter import PorterStemmer
 
 from nltk.tokenize import word_tokenize, RegexpTokenizer
 
+from tqdm import tqdm
+
 class Vocabularise( object ):
     """
     A class used to turn a collection of documents into
@@ -345,7 +347,7 @@ class Vocabularise( object ):
         
         newCorpus = []
         
-        for doc in corpus:
+        for doc in tqdm( corpus ):
             
             doc = doc.lower()
             
