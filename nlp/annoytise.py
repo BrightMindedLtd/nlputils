@@ -34,7 +34,7 @@ class Annoytise( object ):
 
 		try:
 
-			for idx, word in vocabulary:
+			for idx, word in enumerate( vocabulary ):
 				# we may have vocabulary entries made
 				# out of several tokens ...
 				tokens = word.lower().split()
@@ -56,7 +56,22 @@ class Annoytise( object ):
 		
 
 	def saveAnnoy( self, filename=None ):
+
+		if not filename:
+			
+			dateTimeObj = datetime.now()    
+			filename = str( 'vocabulary_index_' + dateTimeObj.strftime( "%d-%b-%Y-%H-%M" ) + '.ANN' ) 
 		
 		if self._index:
+		
 			self._index.save( filename )
+
+	def loadAnnoy( self, filename ):
+
+		self._index.load( filename )
+
+
+	def getNNsByIdx( self, idx, n ):
+
+		return self._index.get_nns_by_item( idx, n )
 
