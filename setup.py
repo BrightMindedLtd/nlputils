@@ -15,7 +15,7 @@ setup(
     name='nlputils',
     packages=['nlp'],
     description='A library of utilities for text preprocessing for machine learning tasks',
-    version='0.0.1',
+    version='1.0.1',
     url='https://github.com/BrightMindedLtd/kapow-datautils',
     author='moneyball@brightminded.com',
     author_email='moneyball@brightminded.com',
