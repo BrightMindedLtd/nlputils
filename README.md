@@ -1,4 +1,4 @@
-# kapow-datautils
+# nlputils
 Utilites for processing various types of data for machine learning models
 
 

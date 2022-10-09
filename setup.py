@@ -12,7 +12,7 @@ if os.path.isfile( reqpath ):
         reqlist = f.read().splitlines()
 
 setup(
-    name='kapowdatautils',
+    name='nlputils',
     packages=['nlp'],
     description='A library of utilities for text preprocessing for machine learning tasks',
     version='0.0.1',
