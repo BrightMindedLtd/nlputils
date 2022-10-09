@@ -1,4 +1,5 @@
 import re
+import itertools
 import pickle
 from datetime import datetime
 
@@ -218,25 +219,21 @@ class Vocabularise( object ):
 
         return stemmedDoc, stem2word
 
-    def mergeVocabularies( self, vocab1, vocab2 ):
-        """Takes two lists of words and merges them into a single
+    def mergeVocabularies( self, *vocabs ):
+        """Takes two or more lists of words and merges them into a single
         list with no repetitions
 
         Parameters
         ----------
-        vocab1 : lst
-            The first list of words
-        vocab2 : lst
-            The second list of words
+        vocabs : an arbitrary number of vocabularies/lists of words
 
         Returns
         -------
         lst
-            a list of all words in vocab1 and vocab2 with no
+            a list of all words in all vocabularies with no
             repetitions
         """
-        
-        return list( set ( vocab1 + vocab2 ) )
+        return list( set ( itertools.chain( *vocabs ) ) )
     
     def mergeStemMaps( self, stemMap1, stemMap2 ):
         """Takes two stem maps and merges them into a single stem
