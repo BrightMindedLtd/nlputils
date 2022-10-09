@@ -2,4 +2,3 @@ nltk==3.6.5
 stop_words==2018.7.23
 numpy==1.21.4
 tqdm==4.62.3
-annoy==1.17.0
