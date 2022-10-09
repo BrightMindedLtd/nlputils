@@ -25,11 +25,3 @@ Utility to build and manage frequency matrices from corpi with the following fun
 2. merge multiple vocabs and freq matrices together
 
 
-### Annoytise
-
-It builds and manages nearest-neighbour embeddings using Spotify Annoy with the following functionality:
-
-1. create annoy index from ( vocab ) using glove
-2 . save + load index
-2. mappings: from token get annoy index and/or vector or from annoy index get word and/or vector
-3. return k nearest neightbours
