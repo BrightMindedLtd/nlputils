@@ -1,6 +1,7 @@
 import numpy as np
 import pickle
 from datetime import datetime
+import time 
 
 from nlp.vocabularise import Vocabularise
 
@@ -67,7 +68,6 @@ class Frequentise( object ):
             word of the new vocabulary list appears in the j'th document of the
             new corpus.
         """
-        
         V = Vocabularise()
         
         vocabList, adjustedCorpus = V.vocabularise( corpus, tokeniser, cleanup, stem )
@@ -77,17 +77,10 @@ class Frequentise( object ):
         docNumber = len( adjustedCorpus )
         
         frequencyMatrix = np.zeros( [ wordNumber, docNumber ], dtype=np.int16 )
-        
-        for i in range( wordNumber ):
-            
-            word = vocabList[ i ]
-            
-            for j in range( docNumber ):
-                
-                doc = adjustedCorpus[ j ]
-                
-                frequencyMatrix[ i, j ] = sum( [ a == word for a in doc ] )
-        
+
+        for idx, word in enumerate( vocabList ):
+            frequencyMatrix[ idx ] += [ ( np.array( doc ) == word ).sum() for doc in adjustedCorpus ]
+
         return vocabList, adjustedCorpus, frequencyMatrix
 
 
