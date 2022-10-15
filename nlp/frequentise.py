@@ -31,10 +31,14 @@ class Frequentise( object ):
         Loads a pickled file from the local directory
     """
     
-    def frequentise( self, corpus, tokeniser=None, cleanup=None, stem=False ):
+    def frequentise( self, corpus, V=None, tokeniser=None, cleanup=None, stem=False ):
         """Turn a corpus of documents into a cleaned up vocabulary list, an
-        appropriately adjusted corpus, and a frequency matrix
+        appropriately adjusted corpus, and a frequency matrix.
+
+        This method creates the vocabulary from the corpus unless V is specified.
         
+        If V is specified, it is assumed that every token in the corpus exists in V.
+
         If tokeniser is not passed, the nltk.tokenize tokenizer
         word_tokenize is used to tokenise instead.
         
@@ -46,6 +50,8 @@ class Frequentise( object ):
         ----------
         corpus : lst
             A list of documents, each of which is a string.
+        V: lst
+            A list of words constituting a pre-specifed vocabulary
         tokeniser : str
             The regular expression to tokenise with
         cleanup : str
@@ -57,7 +63,8 @@ class Frequentise( object ):
         Returns
         -------
         lst
-            a list of cleaned up words with no repetitions.
+            a list of cleaned up words with no repetitions. If V was specified
+            then V is returned here
         lst
             A list of documents, each of which is a list of words found
             in vocabList
@@ -68,18 +75,28 @@ class Frequentise( object ):
             word of the new vocabulary list appears in the j'th document of the
             new corpus.
         """
-        V = Vocabularise()
-        
-        vocabList, adjustedCorpus = V.vocabularise( corpus, tokeniser, cleanup, stem )
-        
+        vize = Vocabularise()
+        vocabList = V
+
+        if not vocabList:
+            vocabList, adjustedCorpus = vize.vocabularise( corpus, tokeniser, cleanup, stem )
+        else:
+            adjustedCorpus = [ vize.tokensCleanup( vize.tokenise( doc ), regex=None ) for doc in corpus ]
+
         wordNumber = len( vocabList )
-        
         docNumber = len( adjustedCorpus )
-        
         frequencyMatrix = np.zeros( [ wordNumber, docNumber ], dtype=np.int16 )
 
-        for idx, word in enumerate( vocabList ):
-            frequencyMatrix[ idx ] += [ ( np.array( doc ) == word ).sum() for doc in adjustedCorpus ]
+        vidx = { w:idx for idx, w in enumerate( vocabList) }
+
+        for j in range( docNumber ):
+            x = np.zeros( wordNumber, dtype=np.int16 )
+
+            for w in adjustedCorpus[ j ]:
+                idx = vidx[ w ]
+                x[ idx ] += 1
+
+            frequencyMatrix[ :,j ] += x
 
         return vocabList, adjustedCorpus, frequencyMatrix
 
