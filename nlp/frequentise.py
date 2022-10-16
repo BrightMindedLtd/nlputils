@@ -93,8 +93,11 @@ class Frequentise( object ):
             x = np.zeros( wordNumber, dtype=np.int16 )
 
             for w in adjustedCorpus[ j ]:
-                idx = vidx[ w ]
-                x[ idx ] += 1
+                try:
+                    idx = vidx[ w ]
+                    x[ idx ] += 1
+                except:
+                    continue
 
             frequencyMatrix[ :,j ] += x
 
